@@ -8,7 +8,8 @@ import {
     Input,
     Label,
     FormGroup,
-    Button
+    Button,
+    ButtonGroup
 } from 'reactstrap';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -26,7 +27,8 @@ class Karyawan extends Component {
             karyawanData: [],
             karyawanName: '',
             karyawanRoles: '',
-            isAdding: false
+            isAdding: false,
+            isDeleting: false
          };
     }
 
@@ -84,6 +86,44 @@ class Karyawan extends Component {
         })
     }
 
+    handleDelete = (_id) => {
+        var self = this;
+        this.setState({
+            isDeleting: true
+        })
+
+        axios.delete('https://sampleapilearn.azurewebsites.net/api/karyawan/'+_id)
+        .then(function (response) {
+            // handle success
+            if(response.status === 200) {
+                if(response.data.result === true) {
+                    self.fetchKaryawanList()
+                    self.setState({
+                        isDeleting: false
+                    })
+                    toast.success('Data telah dihapus!')
+                }
+            }
+            
+        })
+        .catch(function (error) {
+            // handle error
+            self.setState({
+                isDeleting: false
+            })
+            console.log(error);
+            toast.error('Data gagal dihapus!')
+        })
+    }
+
+    buttonTableFormatter = (cell, row) => {
+        return (
+            <ButtonGroup>
+                <Button onClick={() => this.handleDelete(row.id)} size="sm" color="danger" disabled={this.state.isDeleting}><i className="fa fa-trash-o"></i> Delete</Button>
+            </ButtonGroup>
+        )
+    }
+
 
     showDataTables = () => {
         return (
@@ -91,6 +131,7 @@ class Karyawan extends Component {
                 <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="roles">Roles</TableHeaderColumn>
+                <TableHeaderColumn dataField='action' export={false} dataFormat={ this.buttonTableFormatter.bind(this) }>Action</TableHeaderColumn>
             </BootstrapTable>
         )
     }
