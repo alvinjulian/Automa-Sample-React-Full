@@ -136,9 +136,9 @@ class Karyawan extends Component {
 
     showDataTables = () => {
         return (
-            <BootstrapTable data={this.state.karyawanData} striped={true} hover={true}>
+            <BootstrapTable data={this.state.karyawanData} striped={true} hover={true} search exportCSV>
                 <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="name" dataSort={true} searchable>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="roles">Roles</TableHeaderColumn>
                 <TableHeaderColumn dataField='action' export={false} dataFormat={ this.buttonTableFormatter.bind(this) }>Action</TableHeaderColumn>
             </BootstrapTable>
