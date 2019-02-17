@@ -58,6 +58,8 @@ class Karyawan extends Component {
             isAdding: true
         })
 
+        this.notify(_name);
+
         axios.put('https://sampleapilearn.azurewebsites.net/api/karyawan', {
             nama: self.state.karyawanName,
             jabatan: self.state.karyawanRoles
@@ -71,7 +73,11 @@ class Karyawan extends Component {
                     self.setState({
                         isAdding: false
                     })
-                    toast.success('Data telah tersimpan!')
+                    toast.update(this.toastId, {
+                        render: "Data telah tersimpan!",
+                        type: toast.TYPE.SUCCESS,
+                        autoClose: 5000
+                    });
                 }
             }
             
@@ -85,6 +91,9 @@ class Karyawan extends Component {
             toast.error('Data gagal disimpan!')
         })
     }
+
+    notify = (_name) => this.toastId = toast(_name + " sedang mengunggah data....", { autoClose: false });
+    toastId = null
 
     handleDelete = (_id) => {
         var self = this;
