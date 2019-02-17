@@ -58,7 +58,7 @@ class Karyawan extends Component {
             isAdding: true
         })
 
-        this.notify(_name);
+        this.notify();
 
         axios.put('https://sampleapilearn.azurewebsites.net/api/karyawan', {
             nama: self.state.karyawanName,
@@ -92,7 +92,7 @@ class Karyawan extends Component {
         })
     }
 
-    notify = (_name) => this.toastId = toast(_name + " sedang mengunggah data....", { autoClose: false });
+    notify = () => this.toastId = toast( + " sedang mengunggah data....", { autoClose: false });
     toastId = null
 
     handleDelete = (_id) => {
