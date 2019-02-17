@@ -52,6 +52,9 @@ class Karyawan extends Component {
         })
     }
 
+    notify = () => this.toastId = toast(" sedang mengunggah data....", { autoClose: false});
+    toastId = null
+
     handleAdd = () => {
         var self = this;
         this.setState({
@@ -73,7 +76,7 @@ class Karyawan extends Component {
                     self.setState({
                         isAdding: false
                     })
-                    toast.update(this.toastId, {
+                    toast.update(self.toastId, {
                         render: "Data telah tersimpan!",
                         type: toast.TYPE.SUCCESS,
                         autoClose: 5000
@@ -92,8 +95,7 @@ class Karyawan extends Component {
         })
     }
 
-    notify = () => this.toastId = toast( + " sedang mengunggah data....", { autoClose: false });
-    toastId = null
+    
 
     handleDelete = (_id) => {
         var self = this;
@@ -185,6 +187,14 @@ class Karyawan extends Component {
                         </Card>
                     </Col>
                 </Row>
+
+                {/* Modal for Adding Karyawan */}
+                {/* <Modal isOpen={this.state.modalAdd} toggle={this.toggleOpenAdd} className={this.props.className}>
+                    <ModalHeader toggle={this.toggleOpenAdd}>Add New Visitor</ModalHeader>
+                    <ModalBody>
+                            {this.viewAddKaryawan()}
+                    </ModalBody>
+                </Modal> */}
             </div>
         );
     }
