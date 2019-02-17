@@ -1,0 +1,143 @@
+import React, { Component } from 'react';
+import {
+    Row,
+    Col,
+    Card,
+    CardHeader,
+    CardBody,
+    Input,
+    Label,
+    FormGroup,
+    Button
+} from 'reactstrap';
+
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
+import axios from 'axios';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+class Karyawan extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            karyawanData: [],
+            karyawanName: '',
+            karyawanRoles: '',
+            isAdding: false
+         };
+    }
+
+    componentDidMount = () => {
+        this.fetchKaryawanList()
+    }
+
+    fetchKaryawanList = () => {
+        var self = this;
+
+        axios.get('https://sampleapilearn.azurewebsites.net/api/karyawan')
+        .then(function (response) {
+            // handle success
+            self.setState({
+                karyawanData: response.data.result
+            })
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+    }
+
+    handleAdd = () => {
+        var self = this;
+        this.setState({
+            isAdding: true
+        })
+
+        axios.put('https://sampleapilearn.azurewebsites.net/api/karyawan', {
+            nama: self.state.karyawanName,
+            jabatan: self.state.karyawanRoles
+          })
+
+        .then(function (response) {
+            // handle success
+            if(response.status === 200) {
+                if(response.data.result === true) {
+                    self.fetchKaryawanList()
+                    self.setState({
+                        isAdding: false
+                    })
+                    toast.success('Data telah tersimpan!')
+                }
+            }
+            
+        })
+        .catch(function (error) {
+            // handle error
+            self.setState({
+                isAdding: false
+            })
+            console.log(error);
+            toast.error('Data gagal disimpan!')
+        })
+    }
+
+
+    showDataTables = () => {
+        return (
+            <BootstrapTable data={this.state.karyawanData} striped={true} hover={true}>
+                <TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="roles">Roles</TableHeaderColumn>
+            </BootstrapTable>
+        )
+    }
+
+    render() {
+        return (
+            <div>
+                <ToastContainer autoClose={8000} position="bottom-right"/>
+                <Row>
+                    <Col md="12">
+                        <Card>
+                            <CardHeader>Tambah Karyawan</CardHeader>
+                            <CardBody>
+                                <FormGroup row>
+                                    <Col md="3">
+                                        <Label htmlFor="text-input">Name</Label>
+                                    </Col>
+                                    <Col xs="12" md="9">
+                                        <Input type="text" name="text-input" id="addKaryawanName" placeholder="Budi" value={this.state.karyawanName} disabled={this.state.isAdding} onChange={e => this.setState({ karyawanName: e.target.value })}/>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Col md="3">
+                                        <Label htmlFor="text-input">Roles</Label>
+                                    </Col>
+                                    <Col xs="12" md="9">
+                                        <Input type="text" name="text-input" id="addKaryawanRoles" placeholder="Manager" value={this.state.karyawanRoles} disabled={this.state.isAdding} onChange={e => this.setState({ karyawanRoles: e.target.value })}/>
+                                    </Col>
+                                </FormGroup>
+                                <Button onClick={() => this.handleAdd()} size="md" color="primary" disabled={this.state.isAdding} className="pull-right"><i className="fa fa-dot-circle-o"></i> Add Karyawan</Button>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md="12">
+                        <Card>
+                            <CardHeader>List Karyawan</CardHeader>
+                            <CardBody>
+                                {this.showDataTables()}
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+}
+
+export default Karyawan;

@@ -1,6 +1,15 @@
 export default {
   items: [
     {
+      name: 'Karyawan',
+      url: '/karyawan',
+      icon: 'fa fa-users',
+      badge: {
+        variant: 'info',
+        text: 'NEW',
+      },
+    },
+    {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',
